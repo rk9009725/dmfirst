@@ -1,11 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Not Found</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#f8f7f1">
+	<meta name="description" content="Find your own rhythm in Goa. Discover sun-washed shores, old-world villages, and the good things in between.">
+	<title>Goa, Slowly | Find your own rhythm</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--paper: #f8f7f1;
+			--ink: #183b38;
+			--muted: #6d7e75;
+			--green: #286653;
+			--coral: #e2785b;
+			--sun: #f0c66d;
+			--line: rgba(24, 59, 56, .16);
+			--serif: "Playfair Display", Georgia, serif;
+			--sans: "DM Sans", sans-serif;
+		}
+
+		* { box-sizing: border-box; }
+		html { scroll-behavior: smooth; }
+		body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); }
+		a { color: inherit; text-decoration: none; }
+		button, input { font: inherit; }
+		button, a { -webkit-tap-highlight-color: transparent; }
+		img { display: block; width: 100%; object-fit: cover; }
+		.wrap { width: min(1180px, calc(100% - 64px)); margin-inline: auto; }
+
+		.topbar { position: absolute; z-index: 5; inset: 0 0 auto; color: white; }
+		.nav { height: 88px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.32); }
+		.brand { display: inline-flex; align-items: center; gap: 11px; font-size: 14px; font-weight: 700; letter-spacing: .03em; }
+		.brand-mark { width: 29px; height: 29px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.8); border-radius: 50%; font-family: var(--serif); font-size: 19px; line-height: 1; }
+		.nav-links { display: flex; gap: 38px; align-items: center; font-size: 12px; font-weight: 600; }
+		.nav-links a { transition: opacity .2s ease; }
+		.nav-links a:hover { opacity: .68; }
+		.nav-cta { padding: 12px 17px; border: 1px solid rgba(255,255,255,.78); border-radius: 2px; }
+		.menu-toggle { display: none; width: 42px; height: 42px; border: 1px solid rgba(255,255,255,.65); color: white; background: transparent; border-radius: 2px; cursor: pointer; }
+		.menu-lines, .menu-lines::before, .menu-lines::after { display: block; width: 17px; height: 1px; margin: auto; background: currentColor; content: ""; }
+		.menu-lines::before { transform: translateY(-5px); }
+		.menu-lines::after { transform: translateY(4px); }
+
+		.hero { min-height: 710px; height: min(850px, 100svh); position: relative; display: flex; align-items: center; color: white; background: #315c54; overflow: hidden; }
+		.hero::before { position: absolute; inset: 0; content: ""; background: linear-gradient(90deg, rgba(10, 37, 35, .67) 0%, rgba(15, 48, 45, .31) 48%, rgba(15, 48, 45, .02) 100%), linear-gradient(0deg, rgba(10, 37, 35, .28), transparent 43%), url("https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=2200&q=88") center 53% / cover; transform: scale(1.015); animation: settle 1.1s ease-out both; }
+		.hero-content { position: relative; z-index: 1; padding-top: 76px; max-width: 710px; animation: rise .8s .12s both; }
+		.eyebrow { display: flex; align-items: center; gap: 10px; text-transform: uppercase; font-size: 10px; letter-spacing: .18em; font-weight: 700; }
+		.eyebrow::before { width: 26px; height: 1px; background: currentColor; content: ""; }
+		h1, h2, h3, p { margin-top: 0; }
+		.hero h1 { max-width: 690px; margin: 25px 0 18px; font: 500 clamp(56px, 7.5vw, 100px)/.99 var(--serif); letter-spacing: -.035em; }
+		.hero h1 em { color: #f2cc7d; font-weight: 500; }
+		.hero-copy { max-width: 450px; margin-bottom: 31px; color: rgba(255,255,255,.88); font-size: 15px; line-height: 1.75; }
+		.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+		.button { min-height: 49px; display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 0 21px; border: 1px solid transparent; border-radius: 2px; font-size: 12px; font-weight: 700; transition: transform .2s ease, background .2s ease; cursor: pointer; }
+		.button:hover { transform: translateY(-2px); }
+		.button-light { color: var(--ink); background: var(--paper); }
+		.button-outline { color: white; border-color: rgba(255,255,255,.72); }
+		.arrow { font-size: 17px; line-height: 0; }
+		.hero-note { position: absolute; z-index: 1; right: max(32px, calc((100% - 1180px) / 2)); bottom: 48px; display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,.9); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+		.hero-note span { width: 36px; height: 1px; background: rgba(255,255,255,.8); }
+
+		.intro { padding: 105px 0 92px; }
+		.intro-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: 11%; align-items: end; }
+		.intro .eyebrow, .section-head .eyebrow { color: var(--coral); }
+		.intro h2, .section-head h2, .slow-copy h2, .quote h2 { margin: 19px 0 0; font: 500 clamp(36px, 4.4vw, 57px)/1.1 var(--serif); letter-spacing: -.025em; }
+		.intro-copy { max-width: 475px; padding-bottom: 4px; color: #61756e; font-size: 14px; line-height: 1.9; }
+		.intro-copy p { margin: 0 0 18px; }
+		.text-link { display: inline-flex; align-items: center; gap: 12px; padding-bottom: 5px; border-bottom: 1px solid var(--coral); color: var(--ink); font-size: 12px; font-weight: 700; }
+
+		.destinations { padding: 82px 0 108px; background: #efeee6; }
+		.section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 38px; }
+		.section-head h2 { margin-top: 15px; }
+		.section-head > p { max-width: 315px; margin-bottom: 5px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+		.places { display: grid; grid-template-columns: 1.15fr .9fr .9fr; gap: 18px; align-items: start; }
+		.place-card:nth-child(2) { margin-top: 46px; }
+		.place-card:nth-child(3) { margin-top: 92px; }
+		.place-image { position: relative; height: 350px; overflow: hidden; background: #b7c9c1; }
+		.place-card:nth-child(2) .place-image { height: 304px; }
+		.place-card:nth-child(3) .place-image { height: 265px; }
+		.place-image img { height: 100%; transition: transform .65s cubic-bezier(.2,.7,.2,1); }
+		.place-card:hover img { transform: scale(1.045); }
+		.place-number { position: absolute; left: 15px; top: 15px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: var(--ink); background: var(--paper); font-size: 10px; font-weight: 700; }
+		.place-info { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 17px; }
+		.place-info h3 { margin: 0; font: 500 24px/1.2 var(--serif); }
+		.place-info span { color: var(--muted); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+		.place-card p { max-width: 285px; margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+
+		.slow { padding: 110px 0; background: var(--green); color: #f7f4e9; }
+		.slow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10%; align-items: center; }
+		.slow-photo { position: relative; min-height: 490px; }
+		.slow-photo img { height: 490px; }
+		.photo-caption { position: absolute; right: -20px; bottom: 24px; padding: 13px 17px; color: var(--ink); background: var(--sun); font: 500 16px var(--serif); }
+		.slow-copy .eyebrow { color: #f0c66d; }
+		.slow-copy h2 { max-width: 470px; margin: 19px 0 20px; }
+		.slow-copy > p { max-width: 440px; margin-bottom: 30px; color: rgba(247,244,233,.76); font-size: 14px; line-height: 1.9; }
+		.rituals { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; margin-bottom: 31px; border-top: 1px solid rgba(255,255,255,.25); }
+		.ritual { display: flex; gap: 12px; align-items: center; min-height: 56px; border-bottom: 1px solid rgba(255,255,255,.25); color: rgba(247,244,233,.9); font-size: 12px; }
+		.ritual-index { color: #f0c66d; font: 15px var(--serif); }
+		.slow .button { color: var(--ink); background: var(--paper); }
+
+		.quote { position: relative; padding: 105px 24px 111px; text-align: center; overflow: hidden; }
+		.quote::before { position: absolute; top: 57px; left: 50%; color: rgba(226,120,91,.2); content: "“"; font: 180px/.8 var(--serif); transform: translateX(-50%); }
+		.quote blockquote { position: relative; max-width: 780px; margin: 0 auto; }
+		.quote h2 { font-size: clamp(30px, 4vw, 47px); line-height: 1.25; }
+		.quote p { margin: 23px 0 0; color: var(--muted); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
+
+		.plan { position: relative; min-height: 385px; display: flex; align-items: center; color: white; background: #42635a; overflow: hidden; }
+		.plan::before { position: absolute; inset: 0; content: ""; background: linear-gradient(90deg, rgba(12,45,39,.78), rgba(12,45,39,.28)), url("https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=2000&q=85") center 52% / cover; }
+		.plan-inner { position: relative; padding-block: 75px; }
+		.plan h2 { max-width: 570px; margin: 18px 0 13px; font: 500 clamp(40px, 5vw, 64px)/1.06 var(--serif); }
+		.plan p { max-width: 410px; margin-bottom: 24px; color: rgba(255,255,255,.83); font-size: 13px; line-height: 1.75; }
+		.plan .button { color: var(--ink); background: var(--sun); }
+
+		footer { padding: 48px 0 26px; color: var(--paper); background: #153b37; }
+		.footer-main { display: flex; justify-content: space-between; gap: 48px; padding-bottom: 44px; }
+		.footer-brand { max-width: 265px; }
+		.footer-brand .brand-mark { border-color: rgba(255,255,255,.58); }
+		.footer-brand p { margin: 15px 0 0; color: rgba(248,247,241,.62); font-size: 12px; line-height: 1.75; }
+		.footer-links { display: flex; gap: clamp(35px, 7vw, 90px); }
+		.footer-col { display: grid; align-content: start; gap: 12px; font-size: 11px; }
+		.footer-col strong { margin-bottom: 4px; color: #f0c66d; font-size: 10px; letter-spacing: .13em; text-transform: uppercase; }
+		.footer-col a { color: rgba(248,247,241,.76); }
+		.footer-bottom { display: flex; justify-content: space-between; gap: 20px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.2); color: rgba(248,247,241,.55); font-size: 10px; }
+		.footer-bottom p { margin: 0; }
+		.toast { position: fixed; z-index: 10; right: 24px; bottom: 24px; max-width: min(390px, calc(100% - 48px)); padding: 15px 19px; color: white; background: var(--ink); box-shadow: 0 10px 35px rgba(0,0,0,.18); font-size: 13px; line-height: 1.5; opacity: 0; transform: translateY(12px); transition: opacity .25s ease, transform .25s ease; pointer-events: none; }
+		.toast.visible { opacity: 1; transform: translateY(0); }
+		.reveal { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+		.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+		@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+		@keyframes settle { from { transform: scale(1.055); } to { transform: scale(1.015); } }
+		@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } .reveal { opacity: 1; transform: none; } }
+		@media (max-width: 760px) {
+			.wrap { width: min(100% - 40px, 560px); }
+			.nav { height: 72px; }
+			.menu-toggle { display: grid; place-items: center; }
+			.nav-links { position: absolute; top: 72px; left: 0; right: 0; display: none; gap: 0; padding: 10px 20px 18px; background: #183b38; }
+			.nav-links.open { display: grid; }
+			.nav-links a { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.16); }
+			.nav-links .nav-cta { margin-top: 10px; padding: 13px; border: 1px solid rgba(255,255,255,.55); text-align: center; }
+			.hero { min-height: 690px; height: 94svh; max-height: 820px; }
+			.hero::before { background-position: 57% center; }
+			.hero-content { padding-top: 60px; }
+			.hero h1 { font-size: clamp(56px, 14vw, 84px); }
+			.hero-copy { max-width: 360px; font-size: 14px; }
+			.hero-note { right: 20px; bottom: 25px; font-size: 9px; }
+			.intro { padding: 72px 0 70px; }
+			.intro-grid, .slow-grid { grid-template-columns: 1fr; gap: 26px; }
+			.intro-copy { max-width: 540px; }
+			.destinations { padding: 68px 0 76px; }
+			.section-head { display: block; margin-bottom: 26px; }
+			.section-head > p { margin: 15px 0 0; }
+			.places { grid-template-columns: 1fr 1fr; gap: 26px 14px; }
+			.place-card:nth-child(2), .place-card:nth-child(3) { margin-top: 0; }
+			.place-card:first-child { grid-column: 1 / -1; }
+			.place-image, .place-card:nth-child(2) .place-image, .place-card:nth-child(3) .place-image { height: auto; aspect-ratio: 1 / 1.06; }
+			.place-card:first-child .place-image { aspect-ratio: 1.35 / 1; }
+			.place-info { display: block; padding-top: 12px; }
+			.place-info h3 { font-size: 21px; }
+			.place-info span { display: block; margin-top: 6px; font-size: 9px; }
+			.place-card p { font-size: 11px; }
+			.slow { padding: 72px 0; }
+			.slow-grid { gap: 38px; }
+			.slow-photo, .slow-photo img { min-height: 0; height: auto; aspect-ratio: 1.2 / 1; }
+			.photo-caption { right: -8px; bottom: 14px; padding: 10px 12px; font-size: 14px; }
+			.quote { padding: 85px 22px; }
+			.quote::before { top: 43px; font-size: 145px; }
+			.plan { min-height: 360px; }
+			.plan-inner { padding-block: 65px; }
+			.footer-main { display: block; }
+			.footer-links { justify-content: space-between; gap: 15px; margin-top: 34px; }
+		}
+		@media (max-width: 420px) {
+			.wrap { width: calc(100% - 32px); }
+			.hero-actions { align-items: stretch; flex-direction: column; max-width: 235px; }
+			.button { min-height: 47px; }
+			.places { gap: 23px 11px; }
+			.rituals { gap: 0 13px; }
+			.ritual { font-size: 10px; }
+			.footer-links { gap: 12px; }
+			.footer-col { font-size: 10px; }
+			.footer-bottom { display: grid; }
+		}
+	</style>
 </head>
 <body>
-    404 - Not Found
+	<header class="topbar">
+		<nav class="nav wrap" aria-label="Main navigation">
+			<a class="brand" href="#home" aria-label="Goa, Slowly home"><span class="brand-mark">g</span><span>GOA, SLOWLY</span></a>
+			<button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span class="menu-lines"></span></button>
+			<div class="nav-links">
+				<a href="#places">The places</a>
+				<a href="#slow">The feeling</a>
+				<a href="#journal">Field notes</a>
+				<a class="nav-cta" href="#plan">Plan your trip <span class="arrow">↗</span></a>
+			</div>
+		</nav>
+	</header>
+
+	<main>
+		<section class="hero" id="home" aria-labelledby="hero-title">
+			<div class="wrap hero-content">
+				<div class="eyebrow">A little further south</div>
+				<h1 id="hero-title">Find your own<br><em>Goa.</em></h1>
+				<p class="hero-copy">A place for salt in your hair, nowhere to be, and the kind of days you wish would last a little longer.</p>
+				<div class="hero-actions">
+					<a class="button button-light" href="#places">Explore the coast <span class="arrow">↘</span></a>
+					<a class="button button-outline" href="#slow">Meet Goa, slowly</a>
+				</div>
+			</div>
+			<div class="hero-note"><span></span> 15°29′ N · 73°49′ E</div>
+		</section>
+
+		<section class="intro" id="journal">
+			<div class="wrap intro-grid reveal">
+				<div>
+					<div class="eyebrow">Not just a holiday</div>
+					<h2>Come for the coast.<br>Stay for the <em>in-between.</em></h2>
+				</div>
+				<div class="intro-copy">
+					<p>Goa is the first chai before the day gets going. A lane that opens onto the sea. Lunch that turns into the whole afternoon. It is a thousand small moments, each one worth taking your time for.</p>
+					<a href="#slow" class="text-link">A slower way to see it <span class="arrow">↗</span></a>
+				</div>
+			</div>
+		</section>
+
+		<section class="destinations" id="places">
+			<div class="wrap">
+				<div class="section-head reveal">
+					<div><div class="eyebrow">Three ways to wander</div><h2>Pick your own pace.</h2></div>
+					<p>North, south, or somewhere in between. There is no wrong turn here.</p>
+				</div>
+				<div class="places">
+					<article class="place-card reveal">
+						<a href="#plan" aria-label="Discover South Goa">
+							<div class="place-image"><img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=1100&q=85" alt="A quiet tropical beach framed by palms" loading="lazy"><span class="place-number">01</span></div>
+							<div class="place-info"><h3>South Goa</h3><span>Quiet shores · Long lunches</span></div>
+							<p>Soft sand, shady palms, and mornings that don't need an alarm.</p>
+						</a>
+					</article>
+					<article class="place-card reveal">
+						<a href="#plan" aria-label="Discover the Goan hinterland">
+							<div class="place-image"><img src="https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=85" alt="Warm Portuguese-era architecture in a tropical town" loading="lazy"><span class="place-number">02</span></div>
+							<div class="place-info"><h3>The old lanes</h3><span>Fontainhas · Slow strolls</span></div>
+							<p>Painted houses, bakery windows, and stories tucked around each corner.</p>
+						</a>
+					</article>
+					<article class="place-card reveal">
+						<a href="#plan" aria-label="Discover North Goa">
+							<div class="place-image"><img src="https://images.unsplash.com/photo-1506953823976-52e1fdc0149a?auto=format&fit=crop&w=900&q=85" alt="A palm-lined tropical shoreline at golden hour" loading="lazy"><span class="place-number">03</span></div>
+							<div class="place-info"><h3>North Goa</h3><span>Market mornings · Sunset swims</span></div>
+							<p>Find your favourite shack, then come back tomorrow and do it again.</p>
+						</a>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="slow" id="slow">
+			<div class="wrap slow-grid">
+				<div class="slow-photo reveal">
+					<img src="https://images.unsplash.com/photo-1533104816931-20fa691ff6ca?auto=format&fit=crop&w=1200&q=85" alt="A sunlit seaside escape surrounded by tropical greenery" loading="lazy">
+					<div class="photo-caption">Take the scenic way.</div>
+				</div>
+				<div class="slow-copy reveal">
+					<div class="eyebrow">Leave room for the day</div>
+					<h2>The best plans are the ones you don't make.</h2>
+					<p>We believe in the long way round. In meeting the person who makes your breakfast. In finding the beach that isn't on the map. Let the day show you what comes next.</p>
+					<div class="rituals">
+						<div class="ritual"><span class="ritual-index">01</span> Chai before the heat</div>
+						<div class="ritual"><span class="ritual-index">02</span> The road less hurried</div>
+						<div class="ritual"><span class="ritual-index">03</span> Lunch by the water</div>
+						<div class="ritual"><span class="ritual-index">04</span> One more sunset</div>
+					</div>
+					<a class="button" href="#plan">Make a little room <span class="arrow">↗</span></a>
+				</div>
+			</div>
+		</section>
+
+		<section class="quote">
+			<blockquote class="reveal">
+				<h2>“Somewhere between the first swim and the last light, Goa gets under your skin.”</h2>
+				<p>A note from the coast</p>
+			</blockquote>
+		</section>
+
+		<section class="plan" id="plan">
+			<div class="wrap plan-inner reveal">
+				<div class="eyebrow">Your time, your tide</div>
+				<h2>Let the good days find you.</h2>
+				<p>Start with a feeling. We'll help you find the places, people, and little detours to make it yours.</p>
+				<a class="button" href="mailto:hello@goaslowly.example?subject=Help%20me%20plan%20Goa">Let's plan Goa <span class="arrow">↗</span></a>
+			</div>
+		</section>
+	</main>
+
+	<footer>
+		<div class="wrap">
+			<div class="footer-main">
+				<div class="footer-brand">
+					<a class="brand" href="#home"><span class="brand-mark">g</span><span>GOA, SLOWLY</span></a>
+					<p>A little field guide to finding your own rhythm on India's western coast.</p>
+				</div>
+				<div class="footer-links">
+					<div class="footer-col"><strong>Explore</strong><a href="#places">The places</a><a href="#slow">The feeling</a><a href="#journal">Field notes</a></div>
+					<div class="footer-col"><strong>Say hello</strong><a href="mailto:hello@goaslowly.example">Get in touch</a><a href="#plan">Plan a visit</a></div>
+					<div class="footer-col"><strong>Find us</strong><a href="#home">Instagram ↗</a><a href="#home">Pinterest ↗</a></div>
+				</div>
+			</div>
+			<div class="footer-bottom"><p>© 2026 Goa, Slowly. Made for the long way round.</p><p>15°29′ N · 73°49′ E</p></div>
+		</div>
+	</footer>
+	<div class="toast" role="status" aria-live="polite"></div>
+
+	<script>
+		const menuToggle = document.querySelector('.menu-toggle');
+		const navLinks = document.querySelector('.nav-links');
+		const toast = document.querySelector('.toast');
+
+		menuToggle.addEventListener('click', () => {
+			const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
+			menuToggle.setAttribute('aria-expanded', String(!isOpen));
+			menuToggle.setAttribute('aria-label', isOpen ? 'Open navigation' : 'Close navigation');
+			navLinks.classList.toggle('open', !isOpen);
+		});
+
+		navLinks.querySelectorAll('a').forEach((link) => {
+			link.addEventListener('click', () => {
+				navLinks.classList.remove('open');
+				menuToggle.setAttribute('aria-expanded', 'false');
+				menuToggle.setAttribute('aria-label', 'Open navigation');
+			});
+		});
+
+		let toastTimer;
+		document.querySelectorAll('a[href^="mailto:"]').forEach((link) => {
+			link.addEventListener('click', (event) => {
+				event.preventDefault();
+				toast.textContent = 'Your email app can help you start planning. We can’t wait to hear from you.';
+				toast.classList.add('visible');
+				window.clearTimeout(toastTimer);
+				toastTimer = window.setTimeout(() => toast.classList.remove('visible'), 4200);
+			});
+		});
+
+		if ('IntersectionObserver' in window) {
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('in-view');
+						observer.unobserve(entry.target);
+					}
+				});
+			}, { threshold: 0.12 });
+			document.querySelectorAll('.reveal').forEach((item) => observer.observe(item));
+		} else {
+			document.querySelectorAll('.reveal').forEach((item) => item.classList.add('in-view'));
+		}
+	</script>
 </body>
 </html>
