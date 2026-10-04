@@ -1331,14 +1331,23 @@
             showToast('Please wait...');
 
             try {
-                const formData = new FormData();
-                formData.append('phone', phone);
-                formData.append('password', password);
-
-                const response = await fetch('https://script.google.com/macros/s/AKfycbxikUiA0mq91XqHSj8xhNDpBn4gwKEVmGMmffqrKTzQfsHa6cKnKdBN8WhaG-8eknUO/exec', {
-                    method: 'POST',
-                    body: formData
+                const url = new URL('https://script.google.com/macros/s/AKfycbxikUiA0mq91XqHSj8xhNDpBn4gwKEVmGMmffqrKTzQfsHa6cKnKdBN8WhaG-8eknUO/exec');
+                
+                url.searchParams.set('phone', phone);
+                url.searchParams.set('password', password);    
+                
+                const response = await fetch(url, {
+                    method: 'GET'
                 });
+                
+                // const formData = new FormData();
+                // formData.append('phone', phone);
+                // formData.append('password', password);
+
+                // const response = await fetch('https://script.google.com/macros/s/AKfycbxikUiA0mq91XqHSj8xhNDpBn4gwKEVmGMmffqrKTzQfsHa6cKnKdBN8WhaG-8eknUO/exec', {
+                //     method: 'GET',
+                //     body: formData
+                // });
 
                 // Redirect on success regardless of response body
                 window.location.href = "https://dmfirst21.com/#/register?invitationCode=217231870293";
